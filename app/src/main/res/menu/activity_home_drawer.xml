@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_user"
+        android:icon="@drawable/ic_add_user"
+        android:title="@string/user" />
+    <item
+        android:id="@+id/nav_vendor"
+        android:icon="@drawable/ic_add_user"
+        android:title="@string/vendor" />
+    <item
+        android:id="@+id/nav_canteen"
+        android:icon="@drawable/ic_canteen_dark"
+        android:title="@string/canteen" />
+    <item
+        android:id="@+id/nav_product"
+        android:icon="@drawable/ic_canteen_dark"
+        android:title="@string/product" />
+    <item
+        android:id="@+id/nav_unit"
+        android:icon="@drawable/ic_unit_dark"
+        android:title="@string/unit" />
+    <item
+        android:id="@+id/nav_category"
+        android:icon="@drawable/ic_unit_dark"
+        android:title="@string/category" />
+    <item
+        android:id="@+id/nav_mrn"
+        android:icon="@drawable/ic_cart_dark"
+        android:title="@string/mrn" />
+    <item
+        android:id="@+id/nav_indent"
+        android:icon="@drawable/ic_cart_dark"
+        android:title="@string/indent" />
+    <item
+        android:id="@+id/nav_logout"
+        android:icon="@drawable/ic_exit_to_app"
+        android:title="@string/logout" />
+</menu>

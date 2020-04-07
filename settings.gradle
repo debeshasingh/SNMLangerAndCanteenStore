@@ -1,0 +1,2 @@
+rootProject.name='SNMLangerAndCanteenStore'
+include ':app'

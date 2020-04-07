@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">SNMLangerAndCanteenStore</string>
+    <string name="sans_serif_condensed" translatable="false">sans-serif-condensed</string>
+    <string name="my_account">My Account</string>
+    <string name="vendor">Vendor</string>
+    <string name="user">User</string>
+    <string name="product">Product</string>
+    <string name="mrn">MRN</string>
+    <string name="indent">Indent</string>
+    <string name="canteen">Canteen</string>
+    <string name="category">Category</string>
+    <string name="unit">unit</string>
+    <string name="logout">Logout</string>
+    <string name="login">Login</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string-array name="array_type">
+        <item>Select Type</item>
+        <item>Account</item>
+        <item>Canteen</item>
+        <item>Store</item>
+        <item>Admin</item>
+    </string-array>
+
+</resources>

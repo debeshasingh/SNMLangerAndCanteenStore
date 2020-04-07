@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_primary_dark">#EA2C2C</color>
+    <color name="color_primary">#FFFFFF</color>
+    <color name="color_accent">#EA2C2C</color>
+    <color name="color_primary_text">#403F41</color>
+
+    <color name="color_badge_text">#FFFFFF</color>
+    <color name="color_badge">#EA2C2C</color>
+    <color name="color_tab_indicator">#EA2C2C</color>
+    <color name="color_tab_selected_text">#EA2C2C</color>
+    <color name="color_product_type">#f3dd54</color>
+    <color name="color_promotion_pt">#EA2C2C</color>
+    <color name="color_promotion_tex">#403F41</color>
+    <color name="color_promotion_tex_pt">#FFFFFF</color>
+    <color name="color_promotion_text_detail">#EA2C2C</color>
+    <color name="color_button">#EA2C2C</color>
+    <color name="color_fragment_background">#FAFAFA</color>
+    <color name="color_white">#FFFFFFFF</color>
+    <color name="color_black">#FF000000</color>
+    <color name="color_red">#FFFF0000</color>
+    <color name="color_gray">#EEEEEE</color>
+    <color name="color_dark_gray">#BDBDBD</color>
+    <color name="color_dark_gray_one">#757575</color>
+    <color name="color_green">#5B9840</color>
+
+</resources>

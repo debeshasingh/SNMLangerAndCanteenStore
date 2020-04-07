@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "68555100",
+    "firebase_url": "https://snmlangerandcanteenstore.firebaseio.com",
+    "project_id": "snmlangerandcanteenstore",
+    "storage_bucket": "snmlangerandcanteenstore.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:68555100:android:4da13d54492639475a3199",
+        "android_client_info": {
+          "package_name": "com.example.snmlangerandcanteenstore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "68555100-qmr5bncq6njgn9i44q0ejlh3298bdh2a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.snmlangerandcanteenstore",
+            "certificate_hash": "156449bd60f900eccc90604c84682ee6a6546cfb"
+          }
+        },
+        {
+          "client_id": "68555100-kmtmh7r8m9bkttmbdq66un6dk3mmgh4c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2-2F7asnyZiNzB1rl5_c-CyX8CFgB7us"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "68555100-kmtmh7r8m9bkttmbdq66un6dk3mmgh4c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
