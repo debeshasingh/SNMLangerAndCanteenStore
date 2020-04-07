@@ -181,6 +181,8 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
         if (idd == R.id.spinner_unit) {
             if (spinnerUnit.getSelectedItemPosition() > 0) {
                 prodUnit = spinnerUnit.getSelectedItem().toString();
+            }else {
+                prodUnit = "";
             }
         }
         if (idd == R.id.spinner_category) {

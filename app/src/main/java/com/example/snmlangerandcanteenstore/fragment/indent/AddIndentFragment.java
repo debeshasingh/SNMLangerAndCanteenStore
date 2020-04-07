@@ -137,7 +137,6 @@ public class AddIndentFragment extends Fragment implements View.OnClickListener,
                 setCanteen();
             }
         });
-        updateIndents();
 
         return view;
     }
@@ -208,9 +207,9 @@ public class AddIndentFragment extends Fragment implements View.OnClickListener,
                         list.add(indent);
                     }
 
-                    if (list != null) {
+                    if (list.size()>0) {
                         Log.d("debesh", "units Result: " + new Gson().toJson(list));
-                        getHelper().setIndents(getActivity(), list);
+                        //getHelper().setIndents(getActivity(), list);
                         indents.addAll(list);
                     }
 

@@ -1,5 +1,7 @@
 package com.example.snmlangerandcanteenstore.model;
 
+import java.util.List;
+
 public class Product {
     private String pId;
     private String pName;

@@ -141,7 +141,6 @@ public class AddMRNFragment extends Fragment implements View.OnClickListener, He
             }
         });
         setVendor();
-        updateMrns();
 
         return view;
     }
@@ -200,9 +199,9 @@ public class AddMRNFragment extends Fragment implements View.OnClickListener, He
                         list.add(mrn);
                     }
 
-                    if (list != null) {
+                    if (list.size() > 0) {
                         Log.d("debesh", "units Result: " + new Gson().toJson(list));
-                        getHelper().setMrns(getActivity(), list);
+                        //getHelper().setMrns(getActivity(), list);
                         mrns.addAll(list);
                     }
 
@@ -373,7 +372,7 @@ public class AddMRNFragment extends Fragment implements View.OnClickListener, He
 
             @Override
             public void afterTextChanged(Editable s) {
-               updateProducts();
+                updateProducts();
 
             }
         });
@@ -402,7 +401,7 @@ public class AddMRNFragment extends Fragment implements View.OnClickListener, He
                             txtQuantity.setText("Quantity : " + quantity + product.getUnit());
 
                             if (!TextUtils.isEmpty(price)) {
-                                txtAmount.setText("Amount : ₹ "+(Float.valueOf(price) * quantity));
+                                txtAmount.setText("Amount : ₹ " + (Float.valueOf(price) * quantity));
                             } else {
                                 txtAmount.setText("Amount : ₹ 0.0");
                             }
@@ -443,7 +442,7 @@ public class AddMRNFragment extends Fragment implements View.OnClickListener, He
                             upadteQty(quantity);
                             txtQuantity.setText("Quantity : " + quantity + product.getUnit());
                             if (!TextUtils.isEmpty(price)) {
-                                txtAmount.setText("Amount : ₹ "+(Float.valueOf(price) * quantity));
+                                txtAmount.setText("Amount : ₹ " + (Float.valueOf(price) * quantity));
                             } else {
                                 txtAmount.setText("Amount : ₹ 0.0");
                             }
@@ -645,14 +644,14 @@ public class AddMRNFragment extends Fragment implements View.OnClickListener, He
         return products;
     }
 
-    private void updateProducts(){
+    private void updateProducts() {
         String str_search = edtSearch.getText().toString().trim();
         if (!TextUtils.isEmpty(str_search)) {
             List<Product> products = new ArrayList<>();
             products.addAll(getSearchProducts(str_search));
-            Product product = new Product();
-            product.setpName("Select Product");
-            products.add(0, product);
+            Product prod = new Product();
+            prod.setpName("Select Product");
+            products.add(0, prod);
             ArrayAdapter<Product> adapter = new ArrayAdapter<Product>(getActivity(), R.layout.layout_spinner_row, products);
             adapter.setDropDownViewResource(R.layout.layout_spinner_row);
             spinnerProduct.setAdapter(adapter);
@@ -662,9 +661,9 @@ public class AddMRNFragment extends Fragment implements View.OnClickListener, He
                     int idd = parent.getId();
                     if (idd == R.id.spinner_product) {
                         if (spinnerProduct.getSelectedItemPosition() > 0) {
-                            AddMRNFragment.this.product = (Product) spinnerProduct.getSelectedItem();
+                            product = (Product) spinnerProduct.getSelectedItem();
                         } else {
-                            AddMRNFragment.this.product = null;
+                            product = null;
                         }
                     }
                 }
@@ -678,9 +677,9 @@ public class AddMRNFragment extends Fragment implements View.OnClickListener, He
             if (getHelper().getProducts(getActivity()).size() > 0) {
                 List<Product> products = new ArrayList<>();
                 products.addAll(getHelper().getProducts(getActivity()));
-                Product product = new Product();
-                product.setpName("Select Product");
-                products.add(0, product);
+                Product prod = new Product();
+                prod.setpName("Select Product");
+                products.add(0, prod);
                 ArrayAdapter<Product> adapter = new ArrayAdapter<Product>(getActivity(), R.layout.layout_spinner_row, products);
                 adapter.setDropDownViewResource(R.layout.layout_spinner_row);
                 spinnerProduct.setAdapter(adapter);
@@ -690,9 +689,9 @@ public class AddMRNFragment extends Fragment implements View.OnClickListener, He
                         int idd = parent.getId();
                         if (idd == R.id.spinner_product) {
                             if (spinnerProduct.getSelectedItemPosition() > 0) {
-                                AddMRNFragment.this.product = (Product) spinnerProduct.getSelectedItem();
+                                product = (Product) spinnerProduct.getSelectedItem();
                             } else {
-                                AddMRNFragment.this.product = null;
+                                product = null;
                             }
                         }
                     }
