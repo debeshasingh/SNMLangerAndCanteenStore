@@ -46,12 +46,19 @@ public class ReportCatAdapter extends RecyclerView.Adapter<ReportCatAdapter.Cust
         final CatList list = catLists.get(i);
 
         if (list.getCatName() != null) {
-            customViewHolder.txtName.setText("Unit Type : " + list.getCatName());
+            customViewHolder.txtName.setText(list.getCatName());
         }
 
         customViewHolder.rcyProd.setLayoutManager(new LinearLayoutManager(activity));
         reportCatAdapter = new ReportSubCatAdapter(activity);
         customViewHolder.rcyProd.setAdapter(reportCatAdapter);
+        reportCatAdapter.swap(list.getProducts());
+
+        if (i == catLists.size() - 1) {
+            customViewHolder.view.setVisibility(View.GONE);
+        } else {
+            customViewHolder.view.setVisibility(View.VISIBLE);
+        }
 
     }
 
@@ -65,12 +72,14 @@ public class ReportCatAdapter extends RecyclerView.Adapter<ReportCatAdapter.Cust
         public TextView txtName;
         public LinearLayout cardView;
         public RecyclerView rcyProd;
+        public View view;
 
         public CustomViewHolder(View view) {
             super(view);
             this.cardView = view.findViewById(R.id.card_view);
             this.txtName = view.findViewById(R.id.txt_name);
             this.rcyProd = view.findViewById(R.id.rcy_prod);
+            this.view = view.findViewById(R.id.view);
         }
     }
 }

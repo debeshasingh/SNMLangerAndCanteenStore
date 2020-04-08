@@ -407,6 +407,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.nav_register:
                 startActivity(new Intent(this, RegisterActivity.class));
                 break;
+            case R.id.nav_report:
+                startActivity(new Intent(this, ReportActivity.class));
+                break;
             case R.id.nav_logout:
                 getHelper().getUser(null);
                 getHelper().setLogin(this, false);

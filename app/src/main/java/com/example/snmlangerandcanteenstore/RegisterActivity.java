@@ -42,7 +42,7 @@ public class RegisterActivity extends AppCompatActivity implements HelperInterfa
     private EditText edtSearch;
     private Spinner spinnerProduct;
     private Product product;
-    private TextView txtFinalInward,txtFinalOutward;
+    private TextView txtFinalInward,txtFinalOutward,txtBalance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +58,7 @@ public class RegisterActivity extends AppCompatActivity implements HelperInterfa
 
         txtFinalInward = findViewById(R.id.txt_total_instock);
         txtFinalOutward = findViewById(R.id.txt_total_outstock);
+        txtBalance = findViewById(R.id.txt_balance);
 
         rcyInward = findViewById(R.id.rcy_inward);
         rcyInward.setLayoutManager(new LinearLayoutManager(RegisterActivity.this));
@@ -172,11 +173,11 @@ public class RegisterActivity extends AppCompatActivity implements HelperInterfa
             if (obj instanceof Product && pos > 0) {
                 product = (Product) obj;
                 updateView(product);
-                Log.d("Debesh", "inStocks: " + new Gson().toJson(product));
+                Log.d("Debesh", "product: " + new Gson().toJson(product));
             } else {
                 product = null;
                 updateView(product);
-                Log.d("Debesh", "outStocks: " + new Gson().toJson(product));
+                Log.d("Debesh", "product: " + new Gson().toJson(product));
             }
         }
     }
@@ -187,9 +188,9 @@ public class RegisterActivity extends AppCompatActivity implements HelperInterfa
     }
 
     private void updateView(Product product) {
+        List<InStock> inStocks = new ArrayList<>();
+        List<OutStock> outStocks = new ArrayList<>();
         if (product != null && product.getpId() != null) {
-            List<InStock> inStocks = new ArrayList<>();
-            List<OutStock> outStocks = new ArrayList<>();
             if (getHelper().getInStock(RegisterActivity.this) != null) {
                 for (InStock inStock : getHelper().getInStock(RegisterActivity.this)) {
                     if (inStock != null && inStock.getProd() != null && inStock.getProd().getpId().equals(product.getpId())) {
@@ -223,10 +224,16 @@ public class RegisterActivity extends AppCompatActivity implements HelperInterfa
                 txtFinalOutward.setText("Issued Qty : "+fOutStockQuantity(outStocks));
                 outwardAdapter.swap(new ArrayList<OutStock>());
             }
+
+            txtBalance.setText("Balance : "+ (fInStockQuantity(inStocks) + fOutStockQuantity(outStocks)));
+
         } else {
             Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
             inwardAdapter.swap(new ArrayList<InStock>());
             outwardAdapter.swap(new ArrayList<OutStock>());
+            txtFinalInward.setText("Purchesed Qty : "+fInStockQuantity(inStocks));
+            txtFinalOutward.setText("Issued Qty : "+fOutStockQuantity(outStocks));
+            txtBalance.setText("Balance : "+ (fInStockQuantity(inStocks) + fOutStockQuantity(outStocks)));
         }
     }
 

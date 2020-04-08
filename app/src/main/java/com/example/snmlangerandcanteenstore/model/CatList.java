@@ -5,8 +5,7 @@ import java.util.List;
 public class CatList {
     private String catId;
     private String catName;
-    private List<InStock> inStocks;
-    private List<OutStock> outStocks;
+    private List<Product> products;
 
     public String getCatId() {
         return catId;
@@ -24,19 +23,11 @@ public class CatList {
         this.catName = catName;
     }
 
-    public List<InStock> getInStocks() {
-        return inStocks;
+    public List<Product> getProducts() {
+        return products;
     }
 
-    public void setInStocks(List<InStock> inStocks) {
-        this.inStocks = inStocks;
-    }
-
-    public List<OutStock> getOutStocks() {
-        return outStocks;
-    }
-
-    public void setOutStocks(List<OutStock> outStocks) {
-        this.outStocks = outStocks;
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 }

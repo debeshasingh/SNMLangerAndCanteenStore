@@ -38,6 +38,10 @@
         android:icon="@drawable/ic_register_dark"
         android:title="@string/register" />
     <item
+        android:id="@+id/nav_report"
+        android:icon="@drawable/ic_register_dark"
+        android:title="@string/report" />
+    <item
         android:id="@+id/nav_logout"
         android:icon="@drawable/ic_exit_to_app"
         android:title="@string/logout" />

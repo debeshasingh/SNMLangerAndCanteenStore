@@ -90,8 +90,10 @@
                     android:layout_margin="10dp"
                     android:gravity="center"
                     android:singleLine="true"
+                    android:background="@color/color_primary_dark"
                     android:text="InWard"
-                    android:textColor="@color/color_black"
+                    android:padding="5dp"
+                    android:textColor="@color/color_white"
                     android:textSize="18sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -104,11 +106,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_margin="5dp"
                     android:gravity="center"
+                    android:background="@color/color_primary_dark"
                     android:singleLine="true"
                     android:text="OutWard"
-                    android:textColor="@color/color_black"
+                    android:layout_margin="10dp"
+                    android:padding="5dp"
+                    android:textColor="@color/color_white"
                     android:textSize="18sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -138,6 +142,15 @@
 
         <TextView
             android:id="@+id/txt_total_outstock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/color_black" />
+
+        <TextView
+            android:id="@+id/txt_balance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
