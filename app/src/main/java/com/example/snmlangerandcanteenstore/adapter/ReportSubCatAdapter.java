@@ -114,24 +114,24 @@ public class ReportSubCatAdapter extends RecyclerView.Adapter<ReportSubCatAdapte
             Log.d("Debesh", "outStocks: " + new Gson().toJson(outStocks));
 
             if (inStocks.size() > 0) {
-                holder.txtTotalInstock.setText("Purchesed Qty : " + fInStockQuantity(inStocks));
+                holder.txtTotalInstock.setText("Purchesed Qty : " + fInStockQuantity(inStocks)+" "+product.getUnit());
             } else {
-                holder.txtTotalInstock.setText("Purchesed Qty : " + fInStockQuantity(inStocks));
+                holder.txtTotalInstock.setText("Purchesed Qty : " + fInStockQuantity(inStocks)+" "+product.getUnit());
             }
 
             if (outStocks.size() > 0) {
-                holder.txtTotalOutstock.setText("Issued Qty : " + fOutStockQuantity(outStocks));
+                holder.txtTotalOutstock.setText("Issued Qty : " + fOutStockQuantity(outStocks)+" "+product.getUnit());
             } else {
-                holder.txtTotalOutstock.setText("Issued Qty : " + fOutStockQuantity(outStocks));
+                holder.txtTotalOutstock.setText("Issued Qty : " + fOutStockQuantity(outStocks)+" "+product.getUnit());
             }
 
-            holder.txtQuantity.setText("Balance : " + (fInStockQuantity(inStocks) + fOutStockQuantity(outStocks)));
+            holder.txtQuantity.setText("Balance : " + (fInStockQuantity(inStocks) - fOutStockQuantity(outStocks))+" "+product.getUnit());
 
         } else {
             Toast.makeText(activity, "Something went wrong", Toast.LENGTH_SHORT).show();
-            holder.txtTotalInstock.setText("Purchesed Qty : " + fInStockQuantity(inStocks));
-            holder.txtTotalOutstock.setText("Issued Qty : " + fOutStockQuantity(outStocks));
-            holder.txtQuantity.setText("Balance : " + (fInStockQuantity(inStocks) + fOutStockQuantity(outStocks)));
+            holder.txtTotalInstock.setText("Purchesed Qty : " + fInStockQuantity(inStocks)+" "+product.getUnit());
+            holder.txtTotalOutstock.setText("Issued Qty : " + fOutStockQuantity(outStocks)+" "+product.getUnit());
+            holder.txtQuantity.setText("Balance : " + (fInStockQuantity(inStocks) - fOutStockQuantity(outStocks)+" "+product.getUnit()));
         }
     }
 

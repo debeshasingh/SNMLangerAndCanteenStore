@@ -93,7 +93,7 @@ public class IndentUpdateProductAdapter extends RecyclerView.Adapter<IndentUpdat
         customViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (BuildConfig.TYPE.equals("Admin") || BuildConfig.TYPE.equals("Account")) {
+                if (getHelper().getUser(activity)!=null && getHelper().getUser(activity).getType().equals("Admin") ||  getHelper().getUser(activity).getType().equals("Account")) {
                     addRowDialog(outStock, i);
                 }
             }
@@ -345,7 +345,7 @@ public class IndentUpdateProductAdapter extends RecyclerView.Adapter<IndentUpdat
                 }
             });
         } else {
-            if (getHelper().getProducts(activity).size() > 0) {
+            if (getHelper().getProducts(activity) != null && getHelper().getProducts(activity).size() > 0) {
                 products.clear();
                 products.addAll(getHelper().getProducts(activity));
                 Product prodUnit = new Product();
@@ -403,7 +403,7 @@ public class IndentUpdateProductAdapter extends RecyclerView.Adapter<IndentUpdat
 
     private List<Product> getSearchProducts(String key) {
         List<Product> products = new ArrayList<>();
-        if (getHelper().getProducts(activity).size() > 0) {
+        if (getHelper().getProducts(activity) != null && getHelper().getProducts(activity).size() > 0) {
             for (Product product : getHelper().getProducts(activity)) {
                 if (product.getpName().toLowerCase().startsWith(key.toLowerCase()))
                     products.add(product);

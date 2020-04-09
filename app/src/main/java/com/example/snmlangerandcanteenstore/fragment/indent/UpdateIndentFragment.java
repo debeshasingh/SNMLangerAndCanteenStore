@@ -30,6 +30,7 @@ import com.example.snmlangerandcanteenstore.helper.ApplicationHelper;
 import com.example.snmlangerandcanteenstore.model.Canteen;
 import com.example.snmlangerandcanteenstore.model.Indent;
 import com.example.snmlangerandcanteenstore.model.OutStock;
+import com.example.snmlangerandcanteenstore.model.User;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DatabaseReference;
 import com.google.gson.Gson;
@@ -52,6 +53,7 @@ public class UpdateIndentFragment extends Fragment implements View.OnClickListen
     private TextView txtFinalQuantity;
     private Indent indent;
     private List<Canteen> canteens = new ArrayList<>();
+    private User user;
 
     public UpdateIndentFragment() {
     }
@@ -123,7 +125,11 @@ public class UpdateIndentFragment extends Fragment implements View.OnClickListen
             Toast.makeText(getActivity(), "Please Add Canteens", Toast.LENGTH_SHORT).show();
         }
 
-        if (BuildConfig.TYPE.equals("Admin") || BuildConfig.TYPE.equals("Account")) {
+        if (getHelper().isLogin(getActivity()) && getHelper().getUser(getActivity()) != null) {
+            user = getHelper().getUser(getActivity());
+        }
+
+        if (user!=null && user.getType().equals("Admin") || user!=null && user.getType().equals("Account")) {
             btnAddIndent.setVisibility(View.VISIBLE);
             spinnerCanteen.setEnabled(true);
             spinnerCanteen.setEnabled(true);

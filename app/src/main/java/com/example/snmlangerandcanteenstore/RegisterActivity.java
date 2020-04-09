@@ -129,6 +129,7 @@ public class RegisterActivity extends AppCompatActivity implements HelperInterfa
         String str_search = edtSearch.getText().toString().trim();
         if (!TextUtils.isEmpty(str_search)) {
             List<Product> products = new ArrayList<>();
+            products.clear();
             products.addAll(getSearchProducts(str_search));
             Product pro = new Product();
             pro.setpName("Select Product");
@@ -138,8 +139,9 @@ public class RegisterActivity extends AppCompatActivity implements HelperInterfa
             spinnerProduct.setAdapter(adapter);
             spinnerProduct.setOnItemSelectedListener(this);
         } else {
-            if (getHelper().getProducts(RegisterActivity.this).size() > 0) {
+            if (getHelper().getProducts(RegisterActivity.this) != null && getHelper().getProducts(RegisterActivity.this).size() > 0) {
                 List<Product> products = new ArrayList<>();
+                products.clear();
                 products.addAll(getHelper().getProducts(RegisterActivity.this));
                 Product pro = new Product();
                 pro.setpName("Select Product");
@@ -149,6 +151,7 @@ public class RegisterActivity extends AppCompatActivity implements HelperInterfa
                 spinnerProduct.setAdapter(adapter);
                 spinnerProduct.setOnItemSelectedListener(this);
             } else {
+                getHelper().setProducts(RegisterActivity.this,null);
                 Toast.makeText(RegisterActivity.this, "Please Add Products", Toast.LENGTH_SHORT).show();
             }
         }
@@ -156,11 +159,13 @@ public class RegisterActivity extends AppCompatActivity implements HelperInterfa
 
     private List<Product> getSearchProducts(String key) {
         List<Product> products = new ArrayList<>();
-        if (getHelper().getProducts(RegisterActivity.this).size() > 0) {
+        if (getHelper().getProducts(RegisterActivity.this) != null && getHelper().getProducts(RegisterActivity.this).size() > 0) {
             for (Product product : getHelper().getProducts(RegisterActivity.this)) {
                 if (product.getpName().toLowerCase().startsWith(key.toLowerCase()))
                     products.add(product);
             }
+        }else {
+            getHelper().setProducts(RegisterActivity.this,null);
         }
         return products;
     }
@@ -225,7 +230,7 @@ public class RegisterActivity extends AppCompatActivity implements HelperInterfa
                 outwardAdapter.swap(new ArrayList<OutStock>());
             }
 
-            txtBalance.setText("Balance : "+ (fInStockQuantity(inStocks) + fOutStockQuantity(outStocks)));
+            txtBalance.setText("Balance : "+ (fInStockQuantity(inStocks) - fOutStockQuantity(outStocks)));
 
         } else {
             Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
@@ -233,7 +238,7 @@ public class RegisterActivity extends AppCompatActivity implements HelperInterfa
             outwardAdapter.swap(new ArrayList<OutStock>());
             txtFinalInward.setText("Purchesed Qty : "+fInStockQuantity(inStocks));
             txtFinalOutward.setText("Issued Qty : "+fOutStockQuantity(outStocks));
-            txtBalance.setText("Balance : "+ (fInStockQuantity(inStocks) + fOutStockQuantity(outStocks)));
+            txtBalance.setText("Balance : "+ (fInStockQuantity(inStocks) - fOutStockQuantity(outStocks)));
         }
     }
 

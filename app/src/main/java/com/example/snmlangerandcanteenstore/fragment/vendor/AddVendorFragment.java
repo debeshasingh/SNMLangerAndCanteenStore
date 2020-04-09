@@ -20,6 +20,7 @@ import com.example.snmlangerandcanteenstore.VendorActivity;
 import com.example.snmlangerandcanteenstore.constant.AppConstants;
 import com.example.snmlangerandcanteenstore.constant.HelperInterface;
 import com.example.snmlangerandcanteenstore.helper.ApplicationHelper;
+import com.example.snmlangerandcanteenstore.model.ProdUnit;
 import com.example.snmlangerandcanteenstore.model.Vendor;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
@@ -115,30 +116,44 @@ public class AddVendorFragment extends Fragment implements View.OnClickListener,
         String detail = edtDetail.getText().toString().trim();
 
         if (!TextUtils.isEmpty(name)) {
-            if (!TextUtils.isEmpty(mobile) && mobile.length() == 10) {
-                if (!TextUtils.isEmpty(detail) && detail.length() > 0) {
-                    Vendor vendor = new Vendor();
-                    vendor.setvName(name);
-                    vendor.setvMob(mobile);
-                    vendor.setDetail(detail);
-                    vendor.setvId(String.valueOf(maxId + 1));
+            if(!isVendor(name)){
+                if (!TextUtils.isEmpty(mobile) && mobile.length() == 10) {
+                    if (!TextUtils.isEmpty(detail) && detail.length() > 0) {
+                        Vendor vendor = new Vendor();
+                        vendor.setvName(name);
+                        vendor.setvMob(mobile);
+                        vendor.setDetail(detail);
+                        vendor.setvId(String.valueOf(maxId + 1));
 
-                    reference.child(String.valueOf(maxId)).setValue(vendor);
-                    Toast.makeText(getActivity(), "Vendor Added", Toast.LENGTH_SHORT).show();
-                    getActivity().finish();
+                        reference.child(String.valueOf(maxId)).setValue(vendor);
+                        Toast.makeText(getActivity(), "Vendor Added", Toast.LENGTH_SHORT).show();
+                        getActivity().finish();
 
+                    } else {
+                        Toast.makeText(getActivity(), "Please Enter Detail", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    Toast.makeText(getActivity(), "Please Enter Detail", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Please Enter Mobile Number", Toast.LENGTH_SHORT).show();
                 }
-            } else {
-                Toast.makeText(getActivity(), "Please Enter Mobile Number", Toast.LENGTH_SHORT).show();
+            }else {
+                inputName.setErrorEnabled(true);
+                Toast.makeText(getActivity(), "Vendor Name already exist", Toast.LENGTH_SHORT).show();
             }
         } else {
             inputName.setErrorEnabled(true);
-            Toast.makeText(getActivity(), "Please Enter First Name", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Please Enter Vendor Name", Toast.LENGTH_SHORT).show();
         }
     }
 
+    private boolean isVendor(String key) {
+        if (getHelper().getVendors(getActivity()) !=null && getHelper().getVendors(getActivity()).size() > 0) {
+            for (Vendor vendor : getHelper().getVendors(getActivity())) {
+                if (vendor.getvName().toLowerCase().equals(key.toLowerCase()))
+                    return true;
+            }
+        }
+        return false;
+    }
 
 }
 

@@ -16,6 +16,7 @@ import com.example.snmlangerandcanteenstore.model.OutStock;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -49,7 +50,8 @@ public class RegisterOutstockAdapter extends RecyclerView.Adapter<RegisterOutsto
 
         if (list.getcDate() != null) {
             try {
-                customViewHolder.txtDate.setText("Date : " + formatter.parse(list.getcDate()));
+                Date date = formatter.parse(list.getcDate());
+                customViewHolder.txtDate.setText("Date : " + formatter.format(date));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -72,7 +74,7 @@ public class RegisterOutstockAdapter extends RecyclerView.Adapter<RegisterOutsto
             customViewHolder.txtProductName.setText("Product Name : " + list.getProd().getpName());
         }
         if (list.getpInQty() != null) {
-            customViewHolder.txtQuantity.setText("Quantity : " + list.getpInQty());
+            customViewHolder.txtQuantity.setText("Quantity : " + list.getpInQty()+" "+list.getProd().getUnit());
         }
 
     }

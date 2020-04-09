@@ -35,7 +35,6 @@ import com.example.snmlangerandcanteenstore.model.Canteen;
 import com.example.snmlangerandcanteenstore.model.Indent;
 import com.example.snmlangerandcanteenstore.model.OutStock;
 import com.example.snmlangerandcanteenstore.model.Product;
-import com.example.snmlangerandcanteenstore.model.Vendor;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -51,7 +50,7 @@ import java.util.List;
 
 public class AddIndentFragment extends Fragment implements View.OnClickListener, HelperInterface, AdapterView.OnItemSelectedListener {
 
-    private EditText edtChallanNo, edtIndentNumber, edtDate, edtCreatedBy,edtSearch;
+    private EditText edtChallanNo, edtIndentNumber, edtDate, edtCreatedBy, edtSearch;
     private TextInputLayout inputIndentNumber, inputChallanNo, inputDate, inputCratedBy;
     private Button btnAddIndent, btnAddMrnProduct;
     private DatabaseReference reference;
@@ -185,7 +184,7 @@ public class AddIndentFragment extends Fragment implements View.OnClickListener,
 
     private List<Product> getSearchProducts(String key) {
         List<Product> products = new ArrayList<>();
-        if (getHelper().getProducts(getActivity()).size() > 0) {
+        if (getHelper().getProducts(getActivity()) !=null && getHelper().getProducts(getActivity()).size() > 0) {
             for (Product product : getHelper().getProducts(getActivity())) {
                 if (product.getpName().toLowerCase().startsWith(key.toLowerCase()))
                     products.add(product);
@@ -207,9 +206,9 @@ public class AddIndentFragment extends Fragment implements View.OnClickListener,
                         list.add(indent);
                     }
 
-                    if (list.size()>0) {
-                        Log.d("debesh", "units Result: " + new Gson().toJson(list));
-                        //getHelper().setIndents(getActivity(), list);
+                    if (list.size() > 0) {
+                        Log.d("debesh", "Indent Result: " + new Gson().toJson(list));
+                        indents.clear();
                         indents.addAll(list);
                     }
 
@@ -229,13 +228,13 @@ public class AddIndentFragment extends Fragment implements View.OnClickListener,
         int id = v.getId();
         switch (id) {
             case R.id.btn_add_indent:
-                updateIndents();
-                validateMrn();
+                validateIndent();
                 break;
             case R.id.img_back:
                 ((IndentActivity) getActivity()).onBack();
                 break;
             case R.id.btn_add_row:
+                updateIndents();
                 addRowDialog();
                 break;
         }
@@ -246,7 +245,7 @@ public class AddIndentFragment extends Fragment implements View.OnClickListener,
         return ApplicationHelper.getInstance();
     }
 
-    private void validateMrn() {
+    private void validateIndent() {
 
         inputIndentNumber.setErrorEnabled(false);
         inputChallanNo.setErrorEnabled(false);
@@ -366,7 +365,7 @@ public class AddIndentFragment extends Fragment implements View.OnClickListener,
                         float quantity = (Float.valueOf(number_of_unit) * Float.valueOf(per_in_unit));
                         if (quantity > 0) {
                             upadteQty(quantity);
-                            txtQuantity.setText("Quantity : " + quantity+ product.getUnit());
+                            txtQuantity.setText("Quantity : " + quantity + product.getUnit());
                         } else {
                             txtQuantity.setText("Quantity : 0.0");
                         }
@@ -437,8 +436,8 @@ public class AddIndentFragment extends Fragment implements View.OnClickListener,
                 if (product != null) {
                     if (!TextUtils.isEmpty(numberOfUnit)) {
                         if (!TextUtils.isEmpty(perInUnit)) {
-                            if(canteen !=null){
-                                if(!TextUtils.isEmpty(indent) && !isIndent(indent)){
+                            if (canteen != null) {
+                                if (!TextUtils.isEmpty(indent) && !isIndent(indent)) {
                                     OutStock outStock = new OutStock();
                                     outStock.setProd(product);
                                     outStock.setProUnit(numberOfUnit);
@@ -452,13 +451,13 @@ public class AddIndentFragment extends Fragment implements View.OnClickListener,
                                     outStock.setcNo(challan);
                                     perInstock.add(outStock);
                                     indentProductAdapter.swap(perInstock);
-                                    txtFinalQuantity.setText("Total Quantity : "+fQuantity(perInstock));
+                                    txtFinalQuantity.setText("Total Quantity : " + fQuantity(perInstock));
                                     Log.d("Debesh", "perInstock : " + new Gson().toJson(perInstock));
                                     dialog.cancel();
-                                }else {
+                                } else {
                                     Toast.makeText(getActivity(), "Please Enter Indent Number or Indent already exist", Toast.LENGTH_SHORT).show();
                                 }
-                            }else {
+                            } else {
                                 Toast.makeText(getActivity(), "Please Select Canteen", Toast.LENGTH_SHORT).show();
                             }
                         } else {
@@ -516,7 +515,7 @@ public class AddIndentFragment extends Fragment implements View.OnClickListener,
                 }
             });
         } else {
-            if (getHelper().getProducts(getActivity()).size() > 0) {
+            if (getHelper().getProducts(getActivity()) != null && getHelper().getProducts(getActivity()).size() > 0) {
                 List<Product> products = new ArrayList<>();
                 products.addAll(getHelper().getProducts(getActivity()));
                 Product prodUnit = new Product();
@@ -576,8 +575,19 @@ public class AddIndentFragment extends Fragment implements View.OnClickListener,
         }
         return false;
     }
+    private boolean isChallan(String challan) {
 
-    public void update(){
+        if (indents != null && indents.size() > 0) {
+            for (Indent indent : indents) {
+                if (indent.getcNo() != null && indent.getcNo().equals(challan)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public void update() {
 
         if (indentProductAdapter.outStocks != null) {
             txtFinalQuantity.setText("Total Quantity : " + fQuantity(indentProductAdapter.outStocks));

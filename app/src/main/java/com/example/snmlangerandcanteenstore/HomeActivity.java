@@ -45,6 +45,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private TextView txtUserName, txtUserEmail;
     private DatabaseReference reference;
     private SwipeRefreshLayout refreshLayout;
+    private User user;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,7 +72,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         txtUserEmail = navigationView.getHeaderView(0).findViewById(R.id.txt_user_email);
 
         if (getHelper().isLogin(this) && getHelper().getUser(this) != null) {
-            User user = getHelper().getUser(this);
+            user = getHelper().getUser(this);
             txtUserName.setText(user.getFname() + " " + user.getLname());
             txtUserEmail.setText(user.getEmail());
         }
@@ -98,7 +99,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         navigationView.getMenu().findItem(R.id.nav_indent).setVisible(false);
         navigationView.getMenu().findItem(R.id.nav_category).setVisible(false);
 
-        if (BuildConfig.TYPE.equals("Admin")) {
+        if (user!=null && user.getType().equals("Admin")) {
             navigationView.getMenu().findItem(R.id.nav_user).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_vendor).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_canteen).setVisible(true);
@@ -107,7 +108,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             navigationView.getMenu().findItem(R.id.nav_mrn).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_indent).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_category).setVisible(true);
-        } else if (BuildConfig.TYPE.equals("Store")) {
+        } else if (user!=null && user.getType().equals("Store")) {
             navigationView.getMenu().findItem(R.id.nav_vendor).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_canteen).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_product).setVisible(true);
@@ -115,7 +116,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             navigationView.getMenu().findItem(R.id.nav_mrn).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_indent).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_category).setVisible(true);
-        } else if (BuildConfig.TYPE.equals("Account")) {
+        } else if (user!=null && user.getType().equals("Account")) {
             navigationView.getMenu().findItem(R.id.nav_vendor).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_canteen).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_product).setVisible(true);
@@ -143,8 +144,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                             Log.d("debesh", "products Result: " + new Gson().toJson(products));
                             getHelper().setProducts(HomeActivity.this, products);
                         } else {
+                            getHelper().setProducts(HomeActivity.this, null);
                             Log.d("debesh", "products Result: " + new Gson().toJson(products));
                         }
+                    }else {
+                        getHelper().setProducts(HomeActivity.this, null);
+                        Log.d("debesh", "products Result: " + new Gson().toJson(products));
                     }
                 }
 
@@ -174,8 +179,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                             Log.d("debesh", "category Result: " + new Gson().toJson(categories));
                             getHelper().setCategory(HomeActivity.this, categories);
                         } else {
+                            getHelper().setCategory(HomeActivity.this, null);
                             Log.d("debesh", "category Result: " + new Gson().toJson(categories));
                         }
+                    }else {
+                        getHelper().setCategory(HomeActivity.this, null);
+                        Log.d("debesh", "category Result: " + new Gson().toJson(categories));
                     }
                 }
 
@@ -205,8 +214,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                             Log.d("debesh", "vendors Result: " + new Gson().toJson(vendors));
                             getHelper().setVendors(HomeActivity.this, vendors);
                         } else {
+                            getHelper().setVendors(HomeActivity.this, null);
                             Log.d("debesh", "vendors Result: " + new Gson().toJson(vendors));
                         }
+                    }else {
+                        getHelper().setVendors(HomeActivity.this, null);
+                        Log.d("debesh", "vendors Result: " + new Gson().toJson(vendors));
                     }
                 }
 
@@ -235,8 +248,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                             Log.d("debesh", "canteens Result: " + new Gson().toJson(canteens));
                             getHelper().setCanteens(HomeActivity.this, canteens);
                         } else {
+                            getHelper().setCanteens(HomeActivity.this, null);
                             Log.d("debesh", "canteens Result: " + new Gson().toJson(canteens));
                         }
+                    }else {
+                        getHelper().setCanteens(HomeActivity.this, null);
+                        Log.d("debesh", "canteens Result: " + new Gson().toJson(canteens));
                     }
                 }
 
@@ -265,8 +282,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                             Log.d("debesh", "units Result: " + new Gson().toJson(units));
                             getHelper().setProdUnit(HomeActivity.this, units);
                         } else {
+                            getHelper().setProdUnit(HomeActivity.this, null);
                             Log.d("debesh", "units Result: " + new Gson().toJson(units));
                         }
+                    }else {
+                        getHelper().setProdUnit(HomeActivity.this, null);
+                        Log.d("debesh", "units Result: " + new Gson().toJson(units));
                     }
                 }
 
@@ -296,8 +317,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                             Log.d("debesh", "Mrn Result: " + new Gson().toJson(mrns));
                             getHelper().setMrns(HomeActivity.this, mrns);
                         } else {
+                            getHelper().setMrns(HomeActivity.this, null);
                             Log.d("debesh", "Mrn Result: " + new Gson().toJson(mrns));
                         }
+                    }else {
+                        getHelper().setMrns(HomeActivity.this, null);
+                        Log.d("debesh", "Mrn Result: " + new Gson().toJson(mrns));
                     }
                 }
 
@@ -327,8 +352,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                             Log.d("debesh", "Indent Result: " + new Gson().toJson(indents));
                             getHelper().setIndents(HomeActivity.this, indents);
                         } else {
+                            getHelper().setIndents(HomeActivity.this, null);
                             Log.d("debesh", "Indent Result: " + new Gson().toJson(indents));
                         }
+                    }else {
+                        getHelper().setIndents(HomeActivity.this, null);
+                        Log.d("debesh", "Indent Result: " + new Gson().toJson(indents));
                     }
                 }
 
@@ -345,29 +374,39 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             List<InStock> inStocks = new ArrayList<>();
             for (Mrn mrn : getHelper().getMrns(HomeActivity.this)) {
                 if (mrn != null && mrn.getInStocks() != null && mrn.getInStocks().size() > 0) {
+                    inStocks.clear();
                     inStocks.addAll(mrn.getInStocks());
                 }
             }
             if(inStocks.size()>0){
                 Log.d("Debesh", "inStocks : "+new Gson().toJson(inStocks));
                 getHelper().setInStock(HomeActivity.this,inStocks);
+            }else {
+                getHelper().setInStock(HomeActivity.this,null);
+                Toast.makeText(this, "No MRN", Toast.LENGTH_SHORT).show();
             }
         }else {
+            getHelper().setInStock(HomeActivity.this,null);
             Toast.makeText(this, "No MRN", Toast.LENGTH_SHORT).show();
         }
         if (getHelper().getIndents(HomeActivity.this) != null) {
             List<OutStock> outStocks = new ArrayList<>();
             for (Indent indent : getHelper().getIndents(HomeActivity.this)) {
                 if (indent != null && indent.getoStocks() != null && indent.getoStocks().size() > 0) {
+                    outStocks.clear();
                     outStocks.addAll(indent.getoStocks());
                 }
             }
             if(outStocks.size()>0){
                 Log.d("Debesh", "outStocks : "+new Gson().toJson(outStocks));
                 getHelper().setOutStock(HomeActivity.this,outStocks);
+            }else {
+                Toast.makeText(this, "No Indent", Toast.LENGTH_SHORT).show();
+                getHelper().setOutStock(HomeActivity.this,null);
             }
         }else {
             Toast.makeText(this, "No Indent", Toast.LENGTH_SHORT).show();
+            getHelper().setOutStock(HomeActivity.this,null);
         }
     }
 
@@ -439,6 +478,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onRefresh() {
         updateProdUnits();
+        updateCategory();
         updateProducts();
         updateVendors();
         updateCanteens();

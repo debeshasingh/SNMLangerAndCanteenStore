@@ -27,6 +27,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class AddCategoryFragment extends Fragment implements View.OnClickListener, HelperInterface {
 
@@ -36,6 +39,7 @@ public class AddCategoryFragment extends Fragment implements View.OnClickListene
     private DatabaseReference reference;
     private Long maxId = 0L;
     private ImageView imgBack;
+    private List<Category> categories = new ArrayList<>();
 
 
     public static Fragment newInstance() {
@@ -107,19 +111,33 @@ public class AddCategoryFragment extends Fragment implements View.OnClickListene
         String name = edtName.getText().toString().trim();
 
         if (!TextUtils.isEmpty(name)) {
-            Category canteen = new Category();
-            canteen.setCatName(name);
-            canteen.setCatId(String.valueOf(maxId + 1));
+            if (!isCat(name)) {
+                Category canteen = new Category();
+                canteen.setCatName(name);
+                canteen.setCatId(String.valueOf(maxId + 1));
 
-            reference.child(String.valueOf(maxId)).setValue(canteen);
-            Toast.makeText(getActivity(), "Category Added", Toast.LENGTH_SHORT).show();
-            getActivity().finish();
+                reference.child(String.valueOf(maxId)).setValue(canteen);
+                Toast.makeText(getActivity(), "Category Added", Toast.LENGTH_SHORT).show();
+                getActivity().finish();
+            } else {
+                inputName.setErrorEnabled(true);
+                Toast.makeText(getActivity(), "Category Name already exist", Toast.LENGTH_SHORT).show();
+            }
         } else {
             inputName.setErrorEnabled(true);
             Toast.makeText(getActivity(), "Please Enter Category Name", Toast.LENGTH_SHORT).show();
         }
     }
 
+    private boolean isCat(String key) {
+        if (getHelper().getCategory(getActivity()) != null && getHelper().getCategory(getActivity()).size() > 0) {
+            for (Category category : getHelper().getCategory(getActivity())) {
+                if (category.getCatName().toLowerCase().equals(key.toLowerCase()))
+                    return true;
+            }
+        }
+        return false;
+    }
 
 }
 

@@ -12,25 +12,29 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.snmlangerandcanteenstore.BuildConfig;
 import com.example.snmlangerandcanteenstore.MrnActivity;
 import com.example.snmlangerandcanteenstore.R;
 import com.example.snmlangerandcanteenstore.constant.AppConstants;
+import com.example.snmlangerandcanteenstore.constant.HelperInterface;
 import com.example.snmlangerandcanteenstore.fragment.mrn.AddMRNFragment;
+import com.example.snmlangerandcanteenstore.helper.ApplicationHelper;
 import com.example.snmlangerandcanteenstore.model.InStock;
+import com.example.snmlangerandcanteenstore.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class MrnProductAdapter extends RecyclerView.Adapter<MrnProductAdapter.CustomViewHolder> {
+public class MrnProductAdapter extends RecyclerView.Adapter<MrnProductAdapter.CustomViewHolder> implements HelperInterface {
 
     public List<InStock> inStocks;
     private Activity activity;
+    private User user;
 
     public MrnProductAdapter(Activity activity) {
         this.inStocks = new ArrayList<>();
         this.activity = activity;
+        this.user = new User();
     }
 
     public void swap(List<InStock> inStockList) {
@@ -48,7 +52,12 @@ public class MrnProductAdapter extends RecyclerView.Adapter<MrnProductAdapter.Cu
     @Override
     public void onBindViewHolder(CustomViewHolder customViewHolder, final int i) {
         final InStock inStock = inStocks.get(i);
-        if (BuildConfig.TYPE.equals("Admin") || BuildConfig.TYPE.equals("Account")) {
+
+        if (getHelper().isLogin(activity) && getHelper().getUser(activity) != null) {
+            user = getHelper().getUser(activity);
+        }
+
+        if (user != null && user.getType().equals("Admin") || user != null && user.getType().equals("Account")) {
             customViewHolder.txtPerNumPrice.setVisibility(View.VISIBLE);
             customViewHolder.txtAmount.setVisibility(View.VISIBLE);
         } else {
@@ -56,7 +65,7 @@ public class MrnProductAdapter extends RecyclerView.Adapter<MrnProductAdapter.Cu
             customViewHolder.txtAmount.setVisibility(View.GONE);
         }
         if (inStock != null) {
-            if (inStock.getProd() != null && inStock.getProd().getpName()!=null) {
+            if (inStock.getProd() != null && inStock.getProd().getpName() != null) {
                 customViewHolder.txtProductName.setText("Product name : " + inStock.getProd().getpName() + " (" + inStock.getProd().getUnit() + ")");
             }
             if (inStock.getProUnit() != null) {
@@ -90,6 +99,11 @@ public class MrnProductAdapter extends RecyclerView.Adapter<MrnProductAdapter.Cu
     @Override
     public int getItemCount() {
         return (null != inStocks ? inStocks.size() : 0);
+    }
+
+    @Override
+    public ApplicationHelper getHelper() {
+        return ApplicationHelper.getInstance();
     }
 
     public static class CustomViewHolder extends RecyclerView.ViewHolder {

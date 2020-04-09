@@ -3,10 +3,7 @@
 package com.example.snmlangerandcanteenstore.fragment.mrn;
 
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,34 +12,26 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.snmlangerandcanteenstore.BuildConfig;
 import com.example.snmlangerandcanteenstore.MrnActivity;
 import com.example.snmlangerandcanteenstore.R;
-import com.example.snmlangerandcanteenstore.adapter.MrnProductAdapter;
 import com.example.snmlangerandcanteenstore.adapter.MrnUpdateProductAdapter;
 import com.example.snmlangerandcanteenstore.constant.AppConstants;
 import com.example.snmlangerandcanteenstore.constant.HelperInterface;
 import com.example.snmlangerandcanteenstore.helper.ApplicationHelper;
 import com.example.snmlangerandcanteenstore.model.InStock;
 import com.example.snmlangerandcanteenstore.model.Mrn;
-import com.example.snmlangerandcanteenstore.model.Product;
+import com.example.snmlangerandcanteenstore.model.User;
 import com.example.snmlangerandcanteenstore.model.Vendor;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -51,8 +40,8 @@ import java.util.List;
 
 public class UpdateMRNFragment extends Fragment implements View.OnClickListener, HelperInterface, AdapterView.OnItemSelectedListener {
 
-    private EditText edtBillNo, edtMrnNumber, edtDate, edtCreatedBy, edtDriver;
-    private TextInputLayout inputMrnNumber, inputBillNo, inputDate, inputCratedBy, inputDriver;
+    private EditText edtBillNo, edtMrnNumber, edtDate, edtCreatedBy, edtDriver, edtDriverContact;
+    private TextInputLayout inputMrnNumber, inputBillNo, inputDate, inputCratedBy, inputDriver, inputDriverContact;
     private Button btnAddMrn, btnAddMrnProduct;
     private DatabaseReference reference;
     private ImageView imgBack;
@@ -64,6 +53,7 @@ public class UpdateMRNFragment extends Fragment implements View.OnClickListener,
     private List<Mrn> mrns = new ArrayList<>();
     private Mrn mrn;
     private List<Vendor> vendors = new ArrayList<>();
+    private User user;
 
     public UpdateMRNFragment() {
     }
@@ -100,12 +90,14 @@ public class UpdateMRNFragment extends Fragment implements View.OnClickListener,
         edtDate = view.findViewById(R.id.edt_date);
         edtCreatedBy = view.findViewById(R.id.edt_created_by);
         edtDriver = view.findViewById(R.id.edt_driver);
+        edtDriverContact = view.findViewById(R.id.edt_driver_contact);
 
         inputMrnNumber = view.findViewById(R.id.input_mrn);
         inputBillNo = view.findViewById(R.id.input_bill_no);
         inputDate = view.findViewById(R.id.input_date);
         inputCratedBy = view.findViewById(R.id.input_created_by);
         inputDriver = view.findViewById(R.id.input_driver);
+        inputDriverContact = view.findViewById(R.id.input_driver_contact);
 
         txtFinalQuantity = view.findViewById(R.id.txt_final_quantity);
         txtFinalAmount = view.findViewById(R.id.txt_final_amount);
@@ -124,6 +116,11 @@ public class UpdateMRNFragment extends Fragment implements View.OnClickListener,
         edtMrnNumber.setEnabled(false);
         edtBillNo.setEnabled(false);
         edtDriver.setEnabled(false);
+        edtDriverContact.setEnabled(false);
+
+        if (getHelper().isLogin(getActivity()) && getHelper().getUser(getActivity()) != null) {
+            user = getHelper().getUser(getActivity());
+        }
 
         reference = getHelper().databaseReference(getActivity()).child(AppConstants.REF_MRN);
 
@@ -144,7 +141,7 @@ public class UpdateMRNFragment extends Fragment implements View.OnClickListener,
             mrns.addAll(getHelper().getMrns(getActivity()));
         }
 
-        if (BuildConfig.TYPE.equals("Admin") || BuildConfig.TYPE.equals("Account")) {
+        if (user != null && user.getType().equals("Admin") || user != null && user.getType().equals("Account")) {
             btnAddMrn.setVisibility(View.VISIBLE);
             spinnerVendor.setEnabled(true);
             txtFinalAmount.setVisibility(View.GONE);
@@ -152,6 +149,7 @@ public class UpdateMRNFragment extends Fragment implements View.OnClickListener,
             edtMrnNumber.setEnabled(true);
             edtBillNo.setEnabled(true);
             edtDriver.setEnabled(true);
+            edtDriverContact.setEnabled(true);
 
             txtFinalAmount.setVisibility(View.VISIBLE);
 
@@ -179,10 +177,13 @@ public class UpdateMRNFragment extends Fragment implements View.OnClickListener,
         if (mrn.getDriver() != null) {
             edtDriver.setText(mrn.getDriver());
         }
+        if (mrn.getDriCon() != null) {
+            edtDriverContact.setText(mrn.getDriCon());
+        }
         if (mrn.getInStocks() != null && mrn.getInStocks().size() > 0) {
-            mrnProductAdapter.swap(mrn.getInStocks(),mrn);
+            mrnProductAdapter.swap(mrn.getInStocks(), mrn);
         } else {
-            mrnProductAdapter.swap(new ArrayList<InStock>(),null);
+            mrnProductAdapter.swap(new ArrayList<InStock>(), null);
         }
 
         if (mrnProductAdapter.inStocks != null) {
@@ -208,7 +209,7 @@ public class UpdateMRNFragment extends Fragment implements View.OnClickListener,
 
     }
 
-    public void update(){
+    public void update() {
 
         if (mrnProductAdapter.inStocks != null) {
             txtFinalAmount.setText("Total Amount : ₹ " + fAmount(mrnProductAdapter.inStocks));
@@ -248,35 +249,42 @@ public class UpdateMRNFragment extends Fragment implements View.OnClickListener,
         String driver = edtDriver.getText().toString().trim();
         String date = edtDate.getText().toString().trim();
         String createdBy = edtCreatedBy.getText().toString().trim();
+        String driverContact = edtDriverContact.getText().toString().trim();
 
         if (!TextUtils.isEmpty(str_mrn)) {
             if (!TextUtils.isEmpty(bill)) {
                 if (!TextUtils.isEmpty(driver)) {
-                    if (vendor != null) {
-                        if (mrnProductAdapter.inStocks != null && mrnProductAdapter.inStocks.size() > 0) {
-                            float fQuantity = fQuantity(mrnProductAdapter.inStocks);
-                            float fAmount = fAmount(mrnProductAdapter.inStocks);
+                    if (!TextUtils.isEmpty(driverContact) && driverContact.length()==10) {
+                        if (vendor != null) {
+                            if (mrnProductAdapter.inStocks != null && mrnProductAdapter.inStocks.size() > 0) {
+                                float fQuantity = fQuantity(mrnProductAdapter.inStocks);
+                                float fAmount = fAmount(mrnProductAdapter.inStocks);
 
-                            Mrn input_mrn = new Mrn();
-                            input_mrn.setMrnId(str_mrn);
-                            input_mrn.setBillNo(bill);
-                            input_mrn.setDriver(driver);
-                            input_mrn.setvName(vendor.getvName());
-                            input_mrn.setfAmount(String.valueOf(fAmount));
-                            input_mrn.setfQuantity(String.valueOf(fQuantity));
-                            input_mrn.setcDate(date);
-                            input_mrn.setcBy(createdBy);
-                            input_mrn.setInStocks(mrnProductAdapter.inStocks);
+                                Mrn input_mrn = new Mrn();
+                                input_mrn.setMrnId(str_mrn);
+                                input_mrn.setBillNo(bill);
+                                input_mrn.setDriver(driver);
+                                input_mrn.setDriCon(driverContact);
+                                input_mrn.setvName(vendor.getvName());
+                                input_mrn.setfAmount(String.valueOf(fAmount));
+                                input_mrn.setfQuantity(String.valueOf(fQuantity));
+                                input_mrn.setcDate(date);
+                                input_mrn.setcBy(createdBy);
+                                input_mrn.setInStocks(mrnProductAdapter.inStocks);
 
-                            reference.child(str_mrn).setValue(input_mrn);
-                            Toast.makeText(getActivity(), "MRN Updated", Toast.LENGTH_SHORT).show();
-                            getActivity().finish();
+                                reference.child(str_mrn).setValue(input_mrn);
+                                Toast.makeText(getActivity(), "MRN Updated", Toast.LENGTH_SHORT).show();
+                                getActivity().finish();
 
+                            } else {
+                                Toast.makeText(getActivity(), "Please Add Product", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
-                            Toast.makeText(getActivity(), "Please Add Product", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Please Select Vendor", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(getActivity(), "Please Select Vendor", Toast.LENGTH_SHORT).show();
+                        inputDriverContact.setErrorEnabled(true);
+                        Toast.makeText(getActivity(), "Please Enter Driver Contact or valid number", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     inputDriver.setErrorEnabled(true);

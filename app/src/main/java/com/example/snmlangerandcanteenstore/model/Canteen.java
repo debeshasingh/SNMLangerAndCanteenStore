@@ -5,6 +5,7 @@ public class Canteen {
     private String zone;
     private String cMob;
     private String cId;
+    private String cArea;
 
     public String getcName() {
         return cName;
@@ -36,6 +37,14 @@ public class Canteen {
 
     public void setcId(String cId) {
         this.cId = cId;
+    }
+
+    public String getcArea() {
+        return cArea;
+    }
+
+    public void setcArea(String cArea) {
+        this.cArea = cArea;
     }
 
     @Override

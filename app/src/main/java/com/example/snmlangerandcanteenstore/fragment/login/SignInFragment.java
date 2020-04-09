@@ -17,7 +17,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.example.snmlangerandcanteenstore.BuildConfig;
 import com.example.snmlangerandcanteenstore.HomeActivity;
 import com.example.snmlangerandcanteenstore.R;
 import com.example.snmlangerandcanteenstore.SignInActivity;
@@ -43,6 +42,7 @@ public class SignInFragment extends Fragment implements View.OnClickListener, He
     private DatabaseReference reference;
     private ImageView imgBack;
     private boolean isLoding = false;
+    private boolean isFound = false;
 
 
     public static Fragment newInstance() {
@@ -109,30 +109,24 @@ public class SignInFragment extends Fragment implements View.OnClickListener, He
                         reference.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                List<User> users = new ArrayList<>();
-                                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                                    User user = new User();
-                                    user.setFname(postSnapshot.child("fname").getValue().toString());
-                                    user.setLname(postSnapshot.child("lname").getValue().toString());
-                                    user.setEmail(postSnapshot.child("email").getValue().toString());
-                                    user.setUserId(postSnapshot.child("userId").getValue().toString());
-                                    user.setPassword(postSnapshot.child("password").getValue().toString());
-                                    user.setMobile(postSnapshot.child("mobile").getValue().toString());
-                                    user.setType(postSnapshot.child("type").getValue().toString());
-                                    users.add(user);
-                                }
 
-                                for (User user : users) {
-                                    if (user.getEmail().equals(email) && user.getPassword().equals(pass) && user.getType().equals(BuildConfig.TYPE)) {
-                                        getHelper().setLogin(getActivity(), true);
-                                        getHelper().setUser(getActivity(), user);
-                                        startActivity(new Intent(getActivity(), HomeActivity.class));
-                                        getActivity().finish();
-                                    }else {
-                                        isLoding = false;
+                                List<User> users = new ArrayList<>();
+                                if (dataSnapshot.getChildrenCount() > 0) {
+                                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                        User user = postSnapshot.getValue(User.class);
+                                        users.add(user);
+                                    }
+
+                                    if(users.size()>0){
+                                        for (User user : users) {
+                                            if (user.getEmail().equals(email) && user.getPassword().equals(pass)) {
+                                                isFound = true;
+                                                login(user);
+                                                break;
+                                            }
+                                        }
                                     }
                                 }
-
                             }
 
                             @Override
@@ -155,5 +149,18 @@ public class SignInFragment extends Fragment implements View.OnClickListener, He
         }
 
 
+    }
+
+    private void login(User user) {
+        if(isFound){
+            getHelper().setLogin(getActivity(), true);
+            getHelper().setUser(getActivity(), user);
+            startActivity(new Intent(getActivity(), HomeActivity.class));
+            Toast.makeText(getActivity(), "Login successful", Toast.LENGTH_SHORT).show();
+            isLoding = false;
+            getActivity().finish();
+        }else {
+            Toast.makeText(getActivity(), "Invalid User name or password", Toast.LENGTH_SHORT).show();
+        }
     }
 }

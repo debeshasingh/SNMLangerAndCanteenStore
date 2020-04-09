@@ -26,7 +26,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.snmlangerandcanteenstore.BuildConfig;
 import com.example.snmlangerandcanteenstore.MrnActivity;
 import com.example.snmlangerandcanteenstore.R;
 import com.example.snmlangerandcanteenstore.adapter.MrnProductAdapter;
@@ -36,6 +35,7 @@ import com.example.snmlangerandcanteenstore.helper.ApplicationHelper;
 import com.example.snmlangerandcanteenstore.model.InStock;
 import com.example.snmlangerandcanteenstore.model.Mrn;
 import com.example.snmlangerandcanteenstore.model.Product;
+import com.example.snmlangerandcanteenstore.model.User;
 import com.example.snmlangerandcanteenstore.model.Vendor;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
@@ -52,8 +52,8 @@ import java.util.List;
 
 public class AddMRNFragment extends Fragment implements View.OnClickListener, HelperInterface, AdapterView.OnItemSelectedListener {
 
-    private EditText edtBillNo, edtMrnNumber, edtDate, edtCreatedBy, edtDriver, edtVendor;
-    private TextInputLayout inputMrnNumber, inputBillNo, inputDate, inputCratedBy, inputDriver, inputVendor;
+    private EditText edtBillNo, edtMrnNumber, edtDate, edtCreatedBy, edtDriver, edtVendor, edtDriverContact;
+    private TextInputLayout inputMrnNumber, inputBillNo, inputDate, inputCratedBy, inputDriver, inputVendor, inputDriverContact;
     private Button btnAddMrn, btnAddMrnProduct;
     private DatabaseReference reference;
     private ImageView imgBack;
@@ -68,6 +68,7 @@ public class AddMRNFragment extends Fragment implements View.OnClickListener, He
     private List<Mrn> mrns = new ArrayList<>();
     private EditText edtSearch;
     private Spinner spinnerProduct;
+    private User user;
 
 
     public static Fragment newInstance() {
@@ -96,6 +97,7 @@ public class AddMRNFragment extends Fragment implements View.OnClickListener, He
         edtCreatedBy = view.findViewById(R.id.edt_created_by);
         edtDriver = view.findViewById(R.id.edt_driver);
         edtVendor = view.findViewById(R.id.edt_vendor);
+        edtDriverContact = view.findViewById(R.id.edt_driver_contact);
 
         inputMrnNumber = view.findViewById(R.id.input_mrn);
         inputBillNo = view.findViewById(R.id.input_bill_no);
@@ -103,6 +105,7 @@ public class AddMRNFragment extends Fragment implements View.OnClickListener, He
         inputCratedBy = view.findViewById(R.id.input_created_by);
         inputDriver = view.findViewById(R.id.input_driver);
         inputVendor = view.findViewById(R.id.input_vendor);
+        inputDriverContact = view.findViewById(R.id.input_driver_contact);
 
         txtFinalQuantity = view.findViewById(R.id.txt_final_quantity);
         txtFinalAmount = view.findViewById(R.id.txt_final_amount);
@@ -188,23 +191,23 @@ public class AddMRNFragment extends Fragment implements View.OnClickListener, He
     }
 
     private void updateMrns() {
-        reference = getHelper().databaseReference(getActivity()).child(AppConstants.REF_MRN);
         if (reference != null) {
             reference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     List<Mrn> list = new ArrayList<>();
-                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                        Mrn mrn = postSnapshot.getValue(Mrn.class);
-                        list.add(mrn);
-                    }
+                    if (dataSnapshot.getChildrenCount() > 0) {
+                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                            Mrn mrn = postSnapshot.getValue(Mrn.class);
+                            list.add(mrn);
+                        }
 
-                    if (list.size() > 0) {
-                        Log.d("debesh", "units Result: " + new Gson().toJson(list));
-                        //getHelper().setMrns(getActivity(), list);
-                        mrns.addAll(list);
+                        if (list.size() > 0) {
+                            Log.d("debesh", "MRNS Result: " + new Gson().toJson(list));
+                            mrns.clear();
+                            mrns.addAll(list);
+                        }
                     }
-
                 }
 
                 @Override
@@ -213,7 +216,6 @@ public class AddMRNFragment extends Fragment implements View.OnClickListener, He
                 }
             });
         }
-
     }
 
     @Override
@@ -221,13 +223,13 @@ public class AddMRNFragment extends Fragment implements View.OnClickListener, He
         int id = v.getId();
         switch (id) {
             case R.id.btn_add_mrn:
-                updateMrns();
                 validateMrn();
                 break;
             case R.id.img_back:
                 ((MrnActivity) getActivity()).onBack();
                 break;
             case R.id.btn_add_row:
+                updateMrns();
                 addRowDialog();
                 break;
         }
@@ -243,43 +245,51 @@ public class AddMRNFragment extends Fragment implements View.OnClickListener, He
         inputMrnNumber.setErrorEnabled(false);
         inputBillNo.setErrorEnabled(false);
         inputDriver.setErrorEnabled(false);
+        inputDriverContact.setErrorEnabled(false);
 
         String str_mrn = edtMrnNumber.getText().toString().trim();
         String bill = edtBillNo.getText().toString().trim();
         String driver = edtDriver.getText().toString().trim();
         String date = edtDate.getText().toString().trim();
         String createdBy = edtCreatedBy.getText().toString().trim();
+        String driverContact = edtDriverContact.getText().toString().trim();
 
         if (!TextUtils.isEmpty(str_mrn)) {
             if (!isMrn(str_mrn)) {
                 if (!TextUtils.isEmpty(bill)) {
                     if (!isBill(bill)) {
                         if (!TextUtils.isEmpty(driver)) {
-                            if (vendor != null) {
-                                if (mrnProductAdapter.inStocks != null && mrnProductAdapter.inStocks.size() > 0) {
-                                    float fQuantity = fQuantity(mrnProductAdapter.inStocks);
-                                    float fAmount = fAmount(mrnProductAdapter.inStocks);
+                            if (!TextUtils.isEmpty(driverContact) && driverContact.length() == 10) {
+                                if (vendor != null) {
+                                    if (mrnProductAdapter.inStocks != null && mrnProductAdapter.inStocks.size() > 0) {
+                                        float fQuantity = fQuantity(mrnProductAdapter.inStocks);
+                                        float fAmount = fAmount(mrnProductAdapter.inStocks);
 
-                                    Mrn input_mrn = new Mrn();
-                                    input_mrn.setMrnId(str_mrn);
-                                    input_mrn.setBillNo(bill);
-                                    input_mrn.setDriver(driver);
-                                    input_mrn.setvName(vendor.getvName());
-                                    input_mrn.setfAmount(String.valueOf(fAmount));
-                                    input_mrn.setfQuantity(String.valueOf(fQuantity));
-                                    input_mrn.setcDate(date);
-                                    input_mrn.setcBy(createdBy);
-                                    input_mrn.setInStocks(mrnProductAdapter.inStocks);
+                                        Mrn input_mrn = new Mrn();
+                                        input_mrn.setMrnId(str_mrn);
+                                        input_mrn.setBillNo(bill);
+                                        input_mrn.setDriver(driver);
+                                        input_mrn.setDriCon(driverContact);
+                                        input_mrn.setvName(vendor.getvName());
+                                        input_mrn.setfAmount(String.valueOf(fAmount));
+                                        input_mrn.setfQuantity(String.valueOf(fQuantity));
+                                        input_mrn.setcDate(date);
+                                        input_mrn.setcBy(createdBy);
+                                        input_mrn.setInStocks(mrnProductAdapter.inStocks);
 
-                                    reference.child(str_mrn).setValue(input_mrn);
-                                    Toast.makeText(getActivity(), "MRN Added", Toast.LENGTH_SHORT).show();
-                                    getActivity().finish();
+                                        reference.child(str_mrn).setValue(input_mrn);
+                                        Toast.makeText(getActivity(), "MRN Added", Toast.LENGTH_SHORT).show();
+                                        getActivity().finish();
 
+                                    } else {
+                                        Toast.makeText(getActivity(), "Please Add Product", Toast.LENGTH_SHORT).show();
+                                    }
                                 } else {
-                                    Toast.makeText(getActivity(), "Please Add Product", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), "Please Select Vendor", Toast.LENGTH_SHORT).show();
                                 }
                             } else {
-                                Toast.makeText(getActivity(), "Please Select Vendor", Toast.LENGTH_SHORT).show();
+                                inputDriverContact.setErrorEnabled(true);
+                                Toast.makeText(getActivity(), "Please Enter Driver Contact or valid number", Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             inputDriver.setErrorEnabled(true);
@@ -348,8 +358,11 @@ public class AddMRNFragment extends Fragment implements View.OnClickListener, He
 
         txtQuantity.setText("Quantity : 0.0");
         txtAmount.setText("Amount : ₹ 0.0");
+        if (getHelper().isLogin(getActivity()) && getHelper().getUser(getActivity()) != null) {
+            user = getHelper().getUser(getActivity());
+        }
 
-        if (BuildConfig.TYPE.equals("Admin") || BuildConfig.TYPE.equals("Account")) {
+        if (user != null && user.getType().equals("Admin") || user != null && user.getType().equals("Account")) {
             layoutAccount.setVisibility(View.VISIBLE);
             txtFinalAmount.setVisibility(View.VISIBLE);
         } else {
@@ -491,7 +504,6 @@ public class AddMRNFragment extends Fragment implements View.OnClickListener, He
         btnAddProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 inputNumberOfUnit.setErrorEnabled(false);
                 inputPerUnitPrice.setErrorEnabled(false);
                 inputPerInUnit.setErrorEnabled(false);
@@ -635,7 +647,7 @@ public class AddMRNFragment extends Fragment implements View.OnClickListener, He
 
     private List<Product> getSearchProducts(String key) {
         List<Product> products = new ArrayList<>();
-        if (getHelper().getProducts(getActivity()).size() > 0) {
+        if (getHelper().getProducts(getActivity()) != null && getHelper().getProducts(getActivity()).size() > 0) {
             for (Product product : getHelper().getProducts(getActivity())) {
                 if (product.getpName().toLowerCase().startsWith(key.toLowerCase()))
                     products.add(product);
@@ -648,6 +660,7 @@ public class AddMRNFragment extends Fragment implements View.OnClickListener, He
         String str_search = edtSearch.getText().toString().trim();
         if (!TextUtils.isEmpty(str_search)) {
             List<Product> products = new ArrayList<>();
+            products.clear();
             products.addAll(getSearchProducts(str_search));
             Product prod = new Product();
             prod.setpName("Select Product");
@@ -674,7 +687,7 @@ public class AddMRNFragment extends Fragment implements View.OnClickListener, He
                 }
             });
         } else {
-            if (getHelper().getProducts(getActivity()).size() > 0) {
+            if (getHelper().getProducts(getActivity()) !=null && getHelper().getProducts(getActivity()).size() > 0) {
                 List<Product> products = new ArrayList<>();
                 products.addAll(getHelper().getProducts(getActivity()));
                 Product prod = new Product();

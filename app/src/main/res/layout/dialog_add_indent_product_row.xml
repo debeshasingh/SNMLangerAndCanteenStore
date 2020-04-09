@@ -52,41 +52,74 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/input_no_of_unit"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/edt_no_of_unit"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/input_no_of_unit"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/edt_no_of_unit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:digits="1234567890."
+                        android:hint="No of Unit"
+                        android:inputType="number"
+                        android:maxLines="1" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="No of Unit"
-                    android:inputType="number"
-                    android:digits="1234567890."
-                    android:maxLines="1" />
+                    android:layout_marginTop="3dp"
+                    android:text="(eg.Crate/ Bag/ Box/ Tin/)"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/color_primary_dark"
+                    android:textSize="8sp" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/input_per_in_unit"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/edt_per_in_unit"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/input_per_in_unit"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Per in Unit"
-                    android:inputType="number"
-                    android:digits="1234567890."
-                    android:maxLines="1" />
+                    android:layout_height="wrap_content">
 
-            </com.google.android.material.textfield.TextInputLayout>
+                    <EditText
+                        android:id="@+id/edt_per_in_unit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:digits="1234567890."
+                        android:hint="Per in Unit"
+                        android:inputType="number"
+                        android:maxLines="1" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="(eg.pkt/ nos/ kg/ Ltr)"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/color_primary_dark"
+                    android:textSize="8sp" />
+
+
+            </LinearLayout>
 
         </LinearLayout>
 

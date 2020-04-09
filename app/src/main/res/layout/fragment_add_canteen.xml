@@ -64,63 +64,60 @@
                     android:id="@+id/edt_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="First Name"
+                    android:hint="Canteen Name"
                     android:inputType="textPersonName"
                     android:maxLines="1" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
-
-
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_mobile"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/input_mobile"
-                    android:layout_width="0dp"
+                <EditText
+                    android:id="@+id/edt_mobile"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:digits="0123456789"
+                    android:hint="Mobile"
+                    android:inputType="phone"
+                    android:maxLength="10"
+                    android:maxLines="1" />
 
-                    <EditText
-                        android:id="@+id/edt_mobile"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:digits="0123456789"
-                        android:hint="Mobile"
-                        android:inputType="phone"
-                        android:maxLength="10"
-                        android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
-
-
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_area"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/input_detail"
-                    android:layout_width="0dp"
+                <EditText
+                    android:id="@+id/edt_area"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:maxLines="3"
+                    android:hint="Area"/>
 
-                    <EditText
-                        android:id="@+id/edt_detail"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:maxLines="3"
-                        android:hint="Zone"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
-                </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_detail"
+                android:layout_width="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_height="wrap_content">
 
-            </LinearLayout>
+                <EditText
+                    android:id="@+id/edt_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="3"
+                    android:hint="Zone"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
 
             <Button
                 android:id="@+id/btn_add_canteen"

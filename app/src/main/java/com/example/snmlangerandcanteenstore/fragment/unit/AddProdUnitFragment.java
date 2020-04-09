@@ -15,13 +15,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.example.snmlangerandcanteenstore.CanteenActivity;
 import com.example.snmlangerandcanteenstore.R;
 import com.example.snmlangerandcanteenstore.UnitActivity;
 import com.example.snmlangerandcanteenstore.constant.AppConstants;
 import com.example.snmlangerandcanteenstore.constant.HelperInterface;
 import com.example.snmlangerandcanteenstore.helper.ApplicationHelper;
-import com.example.snmlangerandcanteenstore.model.Canteen;
 import com.example.snmlangerandcanteenstore.model.ProdUnit;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
@@ -109,19 +107,32 @@ public class AddProdUnitFragment extends Fragment implements View.OnClickListene
         String name = edtName.getText().toString().trim();
 
         if (!TextUtils.isEmpty(name)) {
-            ProdUnit canteen = new ProdUnit();
-            canteen.setuName(name);
-            canteen.setId(String.valueOf(maxId + 1));
+            if (!isUnit(name)) {
+                ProdUnit canteen = new ProdUnit();
+                canteen.setuName(name);
+                canteen.setId(String.valueOf(maxId + 1));
 
-            reference.child(String.valueOf(maxId)).setValue(canteen);
-            Toast.makeText(getActivity(), "Unit Added", Toast.LENGTH_SHORT).show();
-            getActivity().finish();
+                reference.child(String.valueOf(maxId)).setValue(canteen);
+                Toast.makeText(getActivity(), "Unit Added", Toast.LENGTH_SHORT).show();
+                getActivity().finish();
+            } else {
+                inputName.setErrorEnabled(true);
+                Toast.makeText(getActivity(), "Unit Name already exist", Toast.LENGTH_SHORT).show();
+            }
         } else {
             inputName.setErrorEnabled(true);
             Toast.makeText(getActivity(), "Please Enter Unit Name", Toast.LENGTH_SHORT).show();
         }
     }
 
-
+    private boolean isUnit(String key) {
+        if (getHelper().getProdUnit(getActivity()) != null && getHelper().getProdUnit(getActivity()).size() > 0) {
+            for (ProdUnit prodUnit : getHelper().getProdUnit(getActivity())) {
+                if (prodUnit.getuName().toLowerCase().equals(key.toLowerCase()))
+                    return true;
+            }
+        }
+        return false;
+    }
 }
 

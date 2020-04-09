@@ -12,6 +12,15 @@ public class Mrn {
     private String vName;
     private String fQuantity;
     private String fAmount;
+    private String driCon;
+
+    public String getDriCon() {
+        return driCon;
+    }
+
+    public void setDriCon(String driCon) {
+        this.driCon = driCon;
+    }
 
     public String getMrnId() {
         return mrnId;

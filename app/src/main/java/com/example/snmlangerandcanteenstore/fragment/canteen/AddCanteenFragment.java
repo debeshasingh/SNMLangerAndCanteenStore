@@ -17,12 +17,11 @@ import androidx.fragment.app.Fragment;
 
 import com.example.snmlangerandcanteenstore.CanteenActivity;
 import com.example.snmlangerandcanteenstore.R;
-import com.example.snmlangerandcanteenstore.VendorActivity;
 import com.example.snmlangerandcanteenstore.constant.AppConstants;
 import com.example.snmlangerandcanteenstore.constant.HelperInterface;
 import com.example.snmlangerandcanteenstore.helper.ApplicationHelper;
 import com.example.snmlangerandcanteenstore.model.Canteen;
-import com.example.snmlangerandcanteenstore.model.Vendor;
+import com.example.snmlangerandcanteenstore.model.ProdUnit;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,8 +31,8 @@ import com.google.firebase.database.ValueEventListener;
 
 public class AddCanteenFragment extends Fragment implements View.OnClickListener, HelperInterface {
 
-    private EditText edtMobile, edtName, edtZone;
-    private TextInputLayout inputName, inputMobile, inputZone;
+    private EditText edtMobile, edtName, edtZone, edtArea;
+    private TextInputLayout inputName, inputMobile, inputZone, inputArea;
     private Button btnAddCanteen;
     private DatabaseReference reference;
     private Long maxId = 0L;
@@ -61,10 +60,12 @@ public class AddCanteenFragment extends Fragment implements View.OnClickListener
         edtName = view.findViewById(R.id.edt_name);
         edtMobile = view.findViewById(R.id.edt_mobile);
         edtZone = view.findViewById(R.id.edt_detail);
+        edtArea = view.findViewById(R.id.edt_area);
 
         inputName = view.findViewById(R.id.input_name);
         inputMobile = view.findViewById(R.id.input_mobile);
         inputZone = view.findViewById(R.id.input_detail);
+        inputArea = view.findViewById(R.id.input_area);
 
         reference = getHelper().databaseReference(getActivity()).child(AppConstants.REF_CANTEEN);
 
@@ -114,33 +115,52 @@ public class AddCanteenFragment extends Fragment implements View.OnClickListener
 
         String name = edtName.getText().toString().trim();
         String mobile = edtMobile.getText().toString().trim();
+        String area = edtArea.getText().toString().trim();
         String detail = edtZone.getText().toString().trim();
 
         if (!TextUtils.isEmpty(name)) {
-            if (!TextUtils.isEmpty(mobile) && mobile.length() == 10) {
-                if (!TextUtils.isEmpty(detail) && detail.length() > 0) {
-                    Canteen canteen = new Canteen();
-                    canteen.setcName(name);
-                    canteen.setcMob(mobile);
-                    canteen.setZone(detail);
-                    canteen.setcId(String.valueOf(maxId + 1));
+            if(!isCant(name)){
+                if (!TextUtils.isEmpty(mobile) && mobile.length() == 10) {
+                    if (!TextUtils.isEmpty(area)) {
+                        if (!TextUtils.isEmpty(detail) && detail.length() > 0) {
+                            Canteen canteen = new Canteen();
+                            canteen.setcName(name);
+                            canteen.setcMob(mobile);
+                            canteen.setZone(detail);
+                            canteen.setcArea(area);
+                            canteen.setcId(String.valueOf(maxId + 1));
 
-                    reference.child(String.valueOf(maxId)).setValue(canteen);
-                    Toast.makeText(getActivity(), "Canteen Added", Toast.LENGTH_SHORT).show();
-                    getActivity().finish();
+                            reference.child(String.valueOf(maxId)).setValue(canteen);
+                            Toast.makeText(getActivity(), "Canteen Added", Toast.LENGTH_SHORT).show();
+                            getActivity().finish();
 
+                        } else {
+                            Toast.makeText(getActivity(), "Please Enter Detail", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(getActivity(), "Please Enter Area", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    Toast.makeText(getActivity(), "Please Enter Detail", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Please Enter Mobile Number", Toast.LENGTH_SHORT).show();
                 }
-            } else {
-                Toast.makeText(getActivity(), "Please Enter Mobile Number", Toast.LENGTH_SHORT).show();
+            }else {
+                inputName.setErrorEnabled(true);
+                Toast.makeText(getActivity(), "Canteen Name already exist", Toast.LENGTH_SHORT).show();
             }
         } else {
             inputName.setErrorEnabled(true);
-            Toast.makeText(getActivity(), "Please Enter First Name", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Please Enter Canteen Name", Toast.LENGTH_SHORT).show();
         }
     }
 
-
+    private boolean isCant(String key) {
+        if (getHelper().getCanteens(getActivity())!= null && getHelper().getCanteens(getActivity()).size() > 0) {
+            for (Canteen canteen : getHelper().getCanteens(getActivity())) {
+                if (canteen.getcName().toLowerCase().equals(key.toLowerCase()))
+                    return true;
+            }
+        }
+        return false;
+    }
 }
 

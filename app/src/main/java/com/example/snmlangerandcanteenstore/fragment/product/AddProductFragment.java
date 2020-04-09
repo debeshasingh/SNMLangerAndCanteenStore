@@ -151,19 +151,24 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
 
         if(category !=null){
             if (!TextUtils.isEmpty(name)) {
-                if (!TextUtils.isEmpty(prodUnit) && prodUnit.length() > 0) {
-                    Product product = new Product();
-                    product.setCat(category);
-                    product.setpName(name);
-                    product.setUnit(prodUnit);
-                    product.setpId(String.valueOf(maxId + 1));
+                if(!isProd(name)){
+                    if (!TextUtils.isEmpty(prodUnit) && prodUnit.length() > 0) {
+                        Product product = new Product();
+                        product.setCat(category);
+                        product.setpName(name);
+                        product.setUnit(prodUnit);
+                        product.setpId(String.valueOf(maxId + 1));
 
-                    reference.child(String.valueOf(maxId)).setValue(product);
-                    Toast.makeText(getActivity(), "Product Added", Toast.LENGTH_SHORT).show();
-                    getActivity().finish();
+                        reference.child(String.valueOf(maxId)).setValue(product);
+                        Toast.makeText(getActivity(), "Product Added", Toast.LENGTH_SHORT).show();
+                        getActivity().finish();
 
-                } else {
-                    Toast.makeText(getActivity(), "Please Select Unit", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity(), "Please Select Unit", Toast.LENGTH_SHORT).show();
+                    }
+                }else {
+                    inputName.setErrorEnabled(true);
+                    Toast.makeText(getActivity(), "Product Name already exist", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 inputName.setErrorEnabled(true);
@@ -197,6 +202,16 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    private boolean isProd(String key) {
+        if (getHelper().getProducts(getActivity()) != null && getHelper().getProducts(getActivity()).size() > 0) {
+            for (Product category : getHelper().getProducts(getActivity())) {
+                if (category.getpName().toLowerCase().equals(key.toLowerCase()))
+                    return true;
+            }
+        }
+        return false;
     }
 }
 

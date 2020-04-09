@@ -76,7 +76,7 @@ public class MrnListFragment extends Fragment implements View.OnClickListener, H
                         mrns.add(mrn);
                     }
 
-                    if(mrns!=null){
+                    if(mrns.size()>0){
                         mrnAdapter.swap(mrns);
                     }else {
                         mrnAdapter.swap(new ArrayList<Mrn>());

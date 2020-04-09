@@ -30,6 +30,7 @@ import com.example.snmlangerandcanteenstore.helper.ApplicationHelper;
 import com.example.snmlangerandcanteenstore.model.InStock;
 import com.example.snmlangerandcanteenstore.model.Mrn;
 import com.example.snmlangerandcanteenstore.model.Product;
+import com.example.snmlangerandcanteenstore.model.User;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 
@@ -47,6 +48,7 @@ public class MrnUpdateProductAdapter extends RecyclerView.Adapter<MrnUpdateProdu
     private float final_qty, final_amount;
     private EditText edtSearch;
     private Spinner spinnerProduct;
+    private User user;
 
     public MrnUpdateProductAdapter(Activity activity) {
         this.inStocks = new ArrayList<>();
@@ -54,6 +56,7 @@ public class MrnUpdateProductAdapter extends RecyclerView.Adapter<MrnUpdateProdu
         this.product = new Product();
         this.products = new ArrayList<>();
         this.mrn_data = new Mrn();
+        this.user = new User();
     }
 
     public void swap(List<InStock> inStockList, Mrn input_mrn) {
@@ -74,7 +77,11 @@ public class MrnUpdateProductAdapter extends RecyclerView.Adapter<MrnUpdateProdu
     public void onBindViewHolder(CustomViewHolder customViewHolder, final int i) {
         final InStock inStock = inStocks.get(i);
 
-        if (BuildConfig.TYPE.equals("Admin") || BuildConfig.TYPE.equals("Account")) {
+        if (getHelper().isLogin(activity) && getHelper().getUser(activity) != null) {
+            user = getHelper().getUser(activity);
+        }
+
+        if (user!=null && user.getType().equals("Admin") || user!=null && user.getType().equals("Account")) {
             customViewHolder.txtPerNumPrice.setVisibility(View.VISIBLE);
             customViewHolder.txtAmount.setVisibility(View.VISIBLE);
         } else {
@@ -106,7 +113,7 @@ public class MrnUpdateProductAdapter extends RecyclerView.Adapter<MrnUpdateProdu
         customViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (BuildConfig.TYPE.equals("Admin") || BuildConfig.TYPE.equals("Account")) {
+                if (user!=null && user.getType().equals("Admin") || user!=null && user.getType().equals("Account")) {
                     addRowDialog(inStock, i);
                 }
             }
@@ -169,7 +176,7 @@ public class MrnUpdateProductAdapter extends RecyclerView.Adapter<MrnUpdateProdu
 
        spinnerProduct = dialog.findViewById(R.id.spinner_product);
 
-        if (BuildConfig.TYPE.equals("Admin") || BuildConfig.TYPE.equals("Account")) {
+        if (user!=null && user.getType().equals("Admin") || user!=null && user.getType().equals("Account")) {
             layoutAccount.setVisibility(View.VISIBLE);
         } else {
             layoutAccount.setVisibility(View.GONE);
@@ -432,7 +439,7 @@ public class MrnUpdateProductAdapter extends RecyclerView.Adapter<MrnUpdateProdu
                 }
             });
         } else {
-            if (getHelper().getProducts(activity).size() > 0) {
+            if (getHelper().getProducts(activity) != null && getHelper().getProducts(activity).size() > 0) {
                 products.clear();
                 products.addAll(getHelper().getProducts(activity));
                 Product prodUnit = new Product();
@@ -496,7 +503,7 @@ public class MrnUpdateProductAdapter extends RecyclerView.Adapter<MrnUpdateProdu
 
     private List<Product> getSearchProducts(String key) {
         List<Product> products = new ArrayList<>();
-        if (getHelper().getProducts(activity).size() > 0) {
+        if (getHelper().getProducts(activity) != null && getHelper().getProducts(activity).size() > 0) {
             for (Product product : getHelper().getProducts(activity)) {
                 if (product.getpName().toLowerCase().startsWith(key.toLowerCase()))
                     products.add(product);
