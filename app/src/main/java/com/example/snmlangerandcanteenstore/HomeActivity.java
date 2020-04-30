@@ -85,7 +85,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         updateCanteens();
         updateMrns();
         updateIndents();
-        updateStock();
 
     }
 
@@ -332,7 +331,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 }
             });
         }
-
+        updateStock();
     }
 
     private void updateIndents() {
@@ -367,20 +366,25 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 }
             });
         }
+        updateStock();
     }
 
     private void updateStock() {
         if (getHelper().getMrns(HomeActivity.this) != null) {
+
+            List<InStock> finalInstock = new ArrayList<>();
             List<InStock> inStocks = new ArrayList<>();
             for (Mrn mrn : getHelper().getMrns(HomeActivity.this)) {
                 if (mrn != null && mrn.getInStocks() != null && mrn.getInStocks().size() > 0) {
                     inStocks.clear();
                     inStocks.addAll(mrn.getInStocks());
                 }
+                finalInstock.addAll(inStocks);
             }
-            if(inStocks.size()>0){
-                Log.d("Debesh", "inStocks : "+new Gson().toJson(inStocks));
-                getHelper().setInStock(HomeActivity.this,inStocks);
+
+            if(finalInstock.size()>0){
+                Log.d("Debesh", "inStocks : "+new Gson().toJson(finalInstock));
+                getHelper().setInStock(HomeActivity.this,finalInstock);
             }else {
                 getHelper().setInStock(HomeActivity.this,null);
                 Toast.makeText(this, "No MRN", Toast.LENGTH_SHORT).show();
@@ -390,16 +394,18 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(this, "No MRN", Toast.LENGTH_SHORT).show();
         }
         if (getHelper().getIndents(HomeActivity.this) != null) {
-            List<OutStock> outStocks = new ArrayList<>();
+            List<OutStock> finalOutStocks = new ArrayList<>();
             for (Indent indent : getHelper().getIndents(HomeActivity.this)) {
+                List<OutStock> outStocks = new ArrayList<>();
                 if (indent != null && indent.getoStocks() != null && indent.getoStocks().size() > 0) {
                     outStocks.clear();
                     outStocks.addAll(indent.getoStocks());
                 }
+                finalOutStocks.addAll(outStocks);
             }
-            if(outStocks.size()>0){
-                Log.d("Debesh", "outStocks : "+new Gson().toJson(outStocks));
-                getHelper().setOutStock(HomeActivity.this,outStocks);
+            if(finalOutStocks.size()>0){
+                Log.d("Debesh", "outStocks : "+new Gson().toJson(finalOutStocks));
+                getHelper().setOutStock(HomeActivity.this,finalOutStocks);
             }else {
                 Toast.makeText(this, "No Indent", Toast.LENGTH_SHORT).show();
                 getHelper().setOutStock(HomeActivity.this,null);
@@ -484,7 +490,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         updateCanteens();
         updateMrns();
         updateIndents();
-        updateStock();
         refreshLayout.setRefreshing(false);
     }
 }

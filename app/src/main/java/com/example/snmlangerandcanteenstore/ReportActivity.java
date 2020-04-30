@@ -62,7 +62,6 @@ public class ReportActivity extends AppCompatActivity implements HelperInterface
                     }
                     catList.setProducts(products);
                 }
-                catLists.clear();
                 catLists.add(catList);
             }
 
