@@ -205,9 +205,9 @@ public class RegisterActivity extends AppCompatActivity implements HelperInterfa
             }
 
             if (getHelper().getOutStock(RegisterActivity.this) != null) {
-                for (OutStock inStock : getHelper().getOutStock(RegisterActivity.this)) {
-                    if (inStock != null && inStock.getProd() != null && inStock.getProd().getpId().equals(product.getpId())) {
-                        outStocks.add(inStock);
+                for (OutStock outStock : getHelper().getOutStock(RegisterActivity.this)) {
+                    if (outStock != null && outStock.getProd() != null && outStock.getProd().getpId().equals(product.getpId())) {
+                        outStocks.add(outStock);
                     }
                 }
             }
@@ -236,9 +236,9 @@ public class RegisterActivity extends AppCompatActivity implements HelperInterfa
             Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
             inwardAdapter.swap(new ArrayList<InStock>());
             outwardAdapter.swap(new ArrayList<OutStock>());
-            txtFinalInward.setText("Purchesed Qty : "+fInStockQuantity(inStocks));
-            txtFinalOutward.setText("Issued Qty : "+fOutStockQuantity(outStocks));
-            txtBalance.setText("Balance : "+ (fInStockQuantity(inStocks) - fOutStockQuantity(outStocks)));
+            txtFinalInward.setText("Purchesed Qty : ");
+            txtFinalOutward.setText("Issued Qty : ");
+            txtBalance.setText("Balance : ");
         }
     }
 
